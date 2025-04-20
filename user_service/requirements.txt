@@ -2,3 +2,9 @@ fastapi
 uvicorn
 sqlalchemy
 psycopg2
+
+# 启动 User Service（端口 8000）
+uvicorn user_service.app:app --reload --port 8000
+
+# 启动 Task Service（端口 8001）
+uvicorn task_service.app:app --reload --port 8001

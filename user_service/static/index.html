@@ -131,87 +131,66 @@
     </div>
 
     <script>
-        // 表单切换逻辑
-        function showRegister() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('register-form').style.display = 'block';
+        // 增强型请求处理
+        async function handleRequest(url, method, body) {
+            try {
+                const response = await fetch(url, {
+                    method,
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(body)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || '请求失败');
+                }
+                return await response.json();
+            } catch (error) {
+                showMessage(error.message, 'danger');
+                throw error;
+            }
         }
 
-        function showLogin() {
-            document.getElementById('register-form').style.display = 'none';
-            document.getElementById('login-form').style.display = 'block';
-        }
-
-        // 显示提示信息
-        function showMessage(text, type = 'success') {
-            const messageEl = document.getElementById('message');
-            messageEl.classList.remove('alert-success', 'alert-danger');
-            messageEl.classList.add(`alert-${type}`, 'show');
-            document.getElementById('message-text').textContent = text;
-        }
-
-        function dismissAlert() {
-            document.getElementById('message').classList.remove('show');
-        }
-
-        // 登录表单提交
+        // 登录逻辑
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
-
+            
             try {
-                const response = await fetch('http://localhost:8000/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username,
-                        password
-                    })
-                });
-
-                const data = await response.json();
-                if (response.ok) {
-                    showMessage('登录成功！正在跳转...', 'success');
-                    // 这里可以添加跳转逻辑
-                } else {
-                    showMessage(data.detail || '登录失败', 'danger');
-                }
-            } catch (error) {
-                showMessage('网络错误，请稍后重试', 'danger');
-            }
+                const data = await handleRequest(
+                    'http://localhost:8000/login',
+                    'POST',
+                    { username, password }
+                );
+                
+                showMessage('登录成功！正在跳转...', 'success');
+                localStorage.setItem('authToken', data.token);
+                setTimeout(() => window.location.href = '/tasks.html', 1500);
+            } catch (_) {}
         });
 
-        // 注册表单提交
+        // 注册逻辑
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('registerUsername').value;
             const password = document.getElementById('registerPassword').value;
 
-            try {
-                const response = await fetch('http://localhost:8000/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username,
-                        password
-                    })
-                });
-
-                const data = await response.json();
-                if (response.ok) {
-                    showMessage('注册成功！请登录', 'success');
-                    showLogin();
-                } else {
-                    showMessage(data.detail || '注册失败', 'danger');
-                }
-            } catch (error) {
-                showMessage('网络错误，请稍后重试', 'danger');
+            if (password.length < 6) {
+                showMessage('密码至少需要6位', 'danger');
+                return;
             }
+
+            try {
+                await handleRequest(
+                    'http://localhost:8000/register',
+                    'POST',
+                    { username, password }
+                );
+                
+                showMessage('注册成功！请登录', 'success');
+                showLogin();
+            } catch (_) {}
         });
     </script>
 </body>
