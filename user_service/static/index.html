@@ -161,7 +161,8 @@
             const password = document.getElementById('loginPassword').value;
 
             try {
-                const response = await fetch('http://localhost:8000/login', {
+            //端口号在多少启动就改成多少
+                const response = await fetch('http://localhost:8800/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -191,7 +192,7 @@
             const password = document.getElementById('registerPassword').value;
 
             try {
-                const response = await fetch('http://localhost:8000/register', {
+                const response = await fetch('http://localhost:8800/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
