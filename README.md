@@ -16,28 +16,37 @@
 包含用户服务（User Service）与任务服务（Task Service），支持用户注册、登录和任务管理。
 
 ✨ 环境准备
-1. 安装依赖
+1. 安装依赖  
+在项目根目录下执行以下命令安装必要的依赖库：  
+pip install -r requirements.txt  
 
-在项目根目录下执行：
-pip install -r requirements.txt
+2. 准备数据库  
 
-2.准备数据库
-打开 SQL file 文件夹中的初始化 SQL 脚本。
+打开项目中的 SQL file 文件夹，找到初始化 SQL 脚本。  
+在 pgAdmin 中新建一个数据库，命名为 Distributed_Project。  
+在新建的数据库中，执行 SQL 文件，完成数据表结构创建。  
 
-在 pgAdmin 中新建一个数据库（命名 Distributed_Project）。
+3. 修改配置文件  
 
-在新建的数据库里执行 SQL 文件，完成表结构创建。
+打开项目根目录下的 config.ini 文件。  
 
-3.修改配置文件
+修改数据库连接信息如下：  
+[postgresql]  
+host = localhost  
+database = Distributed_Project  
+user = 你的数据库用户名（默认是 postgres）  
+password = 你的数据库密码  
+port = 5432  
 
-打开项目中的 config.ini，修改数据库连接信息：
-[postgresql]
-host = localhost
-database = Distributed_Project
-user = 你的数据库用户名（默认是postgres，一般不用改）
-password = 你的数据库密码
-port = 5432（默认端口）
-确保 host 和 port 与实际 PostgreSQL 服务器保持一致。
+
+
+注意事项  
+
+host 和 port 通常保持默认（localhost:5432），如果你的 PostgreSQL 安装有特殊设置，请根据实际情况修改。  
+user 默认是 postgres，通常无需更改，只需要填写正确的密码。  
+
+
+------
 
 🚀 启动服务
 进入到服务的目录下（比如 user_service/，一定要cd进入到app.py所在的文件夹下，不然找不到执行文件），然后运行：
