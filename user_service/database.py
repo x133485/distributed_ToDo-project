@@ -1,5 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
+<<<<<<< HEAD
+Base = declarative_base() 
+
+DATABASE_URL = "postgresql://user_service:123321@localhost:5432/user_db"
+engine = create_engine(DATABASE_URL, pool_size=20, max_overflow=0)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+=======
 from sqlalchemy.orm import sessionmaker
 import configparser
 
@@ -17,3 +24,4 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # 声明基类
 Base = declarative_base()
+>>>>>>> 70bf59544e9d6ee3dcbfec5076df32650250b354
