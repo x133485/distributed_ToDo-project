@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <title>任务管理系统</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: url("starts.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+    }
+
+    .glass-card {
+      background: rgba(0, 0, 50, 0.4);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(20px);
+      padding: 2rem;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .form-control {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .form-control::placeholder { color: #eee; }
+    h2 { color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+  </style>
+</head>
+<body>
+<div class="glass-card">
+  <div id="auth-form">
+    <h2 class="text-center mb-4">✨ 登录你的梦幻任务系统</h2>
+    <input type="text" id="username" class="form-control mb-2" placeholder="用户名">
+    <input type="password" id="password" class="form-control mb-2" placeholder="密码">
+    <button class="btn btn-primary w-100 mb-2" onclick="login()">登录</button>
+    <button class="btn btn-outline-secondary w-100" onclick="register()">注册</button>
+  </div>
+
+  <div id="task-manager" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>🌙 我的任务</h2>
+      <button class="btn btn-danger" onclick="logout()">退出登录</button>
+    </div>
+
+    <div class="mb-3">
+      <input type="text" id="task-title" class="form-control mb-2" placeholder="任务标题">
+      <textarea id="task-content" class="form-control mb-2" placeholder="任务内容"></textarea>
+      <button class="btn btn-success w-100" onclick="createTask()">添加任务</button>
+    </div>
+
+    <div class="mb-3">
+      <input type="text" id="public-channel-code" class="form-control mb-2" placeholder="输入公共频道码">
+      <button class="btn btn-outline-info w-100" onclick="viewPublicTask()">📡 查看公共任务</button>
+      <button class="btn btn-outline-success w-100 mt-2" onclick="promptCreatePublicTask()">🌍 创建公共任务</button>
+    </div>
+
+    <div id="task-list" class="mt-4"></div>
+    <div id="public-task-view" class="mt-4"></div>
+  </div>
+</div>
+
+<script>
+  let authToken = localStorage.getItem('authToken');
+  let loadedPublicTaskIds = new Set();
+
+  async function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const response = await fetch('http://localhost:8000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    if (response.ok) {
+      const data = await response.json();
+      authToken = data.token;
+      localStorage.setItem('authToken', authToken);
+      document.getElementById('auth-form').style.display = 'none';
+      document.getElementById('task-manager').style.display = 'block';
+      loadTasks();
+    } else alert('登录失败');
+  }
+
+  async function register() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const response = await fetch('http://localhost:8000/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    if (response.ok) alert('注册成功，请登录');
+    else alert('注册失败');
+  }
+
+  async function logout() {
+    localStorage.removeItem('authToken');
+    authToken = null;
+    document.getElementById('auth-form').style.display = 'block';
+    document.getElementById('task-manager').style.display = 'none';
+    document.getElementById('task-list').innerHTML = '';
+    document.getElementById('public-task-view').innerHTML = '';
+    document.getElementById('public-channel-code').value = '';
+    loadedPublicTaskIds.clear();
+    alert("您已退出登录");
+  }
+
+  async function loadTasks() {
+    const response = await fetch('http://localhost:8001/tasks', {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const tasks = await response.json();
+    const taskList = document.getElementById('task-list');
+    taskList.innerHTML = '';
+    for (const task of tasks) {
+      if (task.is_public && task.channel_code) {
+        if (!loadedPublicTaskIds.has(task.id)) {
+          renderPublicTask(task, true);
+          loadedPublicTaskIds.add(task.id);
+        }
+      } else {
+        taskList.innerHTML += `
+          <div class="card bg-dark bg-opacity-25 text-white mb-3">
+            <div class="card-body">
+              <h5>${task.title}</h5>
+              <p>${task.content}</p>
+              <button class="btn btn-outline-primary btn-sm me-2" onclick="editTask(${task.id}, '${task.title}', '${task.content}')">编辑</button>
+              <button class="btn btn-outline-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+  }
+
+  async function createTask() {
+    const title = document.getElementById('task-title').value;
+    const content = document.getElementById('task-content').value;
+    const response = await fetch('http://localhost:8001/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ title, content })
+    });
+    if (response.ok) {
+      document.getElementById('task-title').value = '';
+      document.getElementById('task-content').value = '';
+      loadTasks();
+    } else {
+      alert("任务创建失败！");
+    }
+  }
+
+  async function editTask(id, oldTitle, oldContent) {
+    const newTitle = prompt("修改任务标题：", oldTitle);
+    const newContent = prompt("修改任务内容：", oldContent);
+    if (!newTitle || !newContent) return;
+    const response = await fetch(`http://localhost:8001/tasks/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ title: newTitle, content: newContent })
+    });
+    if (response.ok) loadTasks();
+    else alert("修改失败");
+  }
+
+  async function deleteTask(taskId) {
+    await fetch(`http://localhost:8001/tasks/${taskId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    loadTasks();
+  }
+
+  function promptCreatePublicTask() {
+    const title = prompt("输入公共任务标题：");
+    const content = prompt("输入公共任务内容：");
+    const code = prompt("设置一个频道码（英文或数字）:");
+    if (!title || !content || !code) return;
+    createPublicTask(title, content, code);
+  }
+
+  async function createPublicTask(title, content, code) {
+    const response = await fetch('http://localhost:8001/public_tasks/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ title, content, channel_code: code })
+    });
+    const result = await response.json();
+    if (response.ok) {
+      alert("创建成功，频道码为：" + result.channel_code);
+      renderPublicTask(result, true);
+      loadedPublicTaskIds.add(result.id);
+    } else {
+      alert("创建失败：" + result.detail);
+    }
+  }
+
+  async function viewPublicTask() {
+    const code = document.getElementById('public-channel-code').value;
+    const response = await fetch(`http://localhost:8001/public_tasks/${code}`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    if (response.ok) {
+      const task = await response.json();
+      if (!loadedPublicTaskIds.has(task.id)) {
+        renderPublicTask(task, task.editable);
+        loadedPublicTaskIds.add(task.id);
+      }
+    } else {
+      alert("找不到对应的公共任务");
+    }
+  }
+
+  function renderPublicTask(task, editable) {
+    const container = document.getElementById('public-task-view');
+    const card = document.createElement('div');
+    card.className = "card bg-info bg-opacity-25 text-white mt-3";
+    card.id = `public-task-${task.id}`;
+    card.innerHTML = `
+      <div class="card-body">
+        <h6>频道码：${task.channel_code}</h6>
+        <h5>${task.title}</h5>
+        <p>${task.content}</p>
+        ${editable ? `
+          <button class="btn btn-outline-warning btn-sm me-2" onclick="editPublicTask(${task.id}, '${task.title}', '${task.content}')">编辑</button>
+          <button class="btn btn-outline-danger btn-sm" onclick="deletePublicTask(${task.id})">删除</button>
+        ` : ''}
+      </div>
+    `;
+    container.appendChild(card);
+  }
+
+  async function editPublicTask(id, oldTitle, oldContent) {
+    const newTitle = prompt("修改公共任务标题：", oldTitle);
+    const newContent = prompt("修改公共任务内容：", oldContent);
+    if (!newTitle || !newContent) return;
+    const response = await fetch(`http://localhost:8001/public_tasks/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ title: newTitle, content: newContent })
+    });
+    if (response.ok) {
+      const updated = await response.json();
+      document.getElementById(`public-task-${id}`).remove();
+      renderPublicTask(updated, true);
+    } else {
+      alert("更新失败");
+    }
+  }
+
+  async function deletePublicTask(id) {
+    const confirmed = confirm("确定删除这个公共任务吗？");
+    if (!confirmed) return;
+    const response = await fetch(`http://localhost:8001/public_tasks/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    if (response.ok) {
+      alert("已删除");
+      const card = document.getElementById(`public-task-${id}`);
+      if (card) card.remove();
+      loadedPublicTaskIds.delete(id);
+    } else {
+      alert("删除失败");
+    }
+  }
+</script>
+</body>
+</html>
