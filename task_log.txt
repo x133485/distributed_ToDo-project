@@ -1,0 +1,9 @@
+INFO:     Will watch for changes in these directories: ['E:\\学习\\大三上学期\\algorithms\\Distributed system\\project\\distributed_ToDo-project-main(1)\\distributed_ToDo-project-main']
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [33464] using StatReload
+INFO:     Started server process [25496]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:8808 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:8808 - "GET /tasks HTTP/1.1" 200 OK
+^C

@@ -3,16 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from uuid import uuid4
-# 关键修改点 ↓↓↓
 from user_service.database import SessionLocal, engine, Base
 from user_service import crud, models
- # 相对导入
+
+
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="User Service")
 
-# CORS配置
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,7 +19,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 依赖注入
 def get_db():
     db = SessionLocal()
     try:
@@ -28,7 +26,7 @@ def get_db():
     finally:
         db.close()
 
-# 数据模型
+
 class UserCreate(BaseModel):
     username: str
     password: str
@@ -38,37 +36,44 @@ class UserLogin(BaseModel):
     password: str
 
 class TokenValidationRequest(BaseModel):
-    token: str  # 仅接收 token 字段
+    token: str
 
-# 接口实现
+
 @app.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if len(user.password) < 6:
-        raise HTTPException(status_code=400, detail="Password too short")
+        raise HTTPException(status_code=400, detail="Password too short, at least 6 digit.")
     
-    db_user = crud.get_user_by_username(db, user.username)
-    if db_user:
+    if crud.get_user_by_username(db, user.username):
         raise HTTPException(status_code=400, detail="Username already registered")
     
-    return crud.create_user(db, user.username, user.password)
+    new_user = crud.create_user(db, user.username, user.password)
+    return {"message": "User created successfully", "token": new_user.token}
 
 @app.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_username(db, user.username)
     if not db_user or db_user.password != user.password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    # 生成唯一 Token 并保存到数据库
+
     token = str(uuid4())
     db_user.token = token
     db.commit()
     db.refresh(db_user)
     
-    return {"token": token}
+    return {"message": "Login successful", "token": token}
 
 @app.post("/validate_user")
 def validate_user(request: TokenValidationRequest, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_token(db, request.token)  # 根据 token 查询用户
+    db_user = crud.get_user_by_token(db, request.token)
     if db_user:
         return {"valid": True, "user_id": db_user.id}
     return {"valid": False}
+
+@app.get("/user_info/{user_id}")
+def get_user_info(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if user:
+        return {"username": user.username}
+    else:
+        raise HTTPException(status_code=404, detail="User not found")

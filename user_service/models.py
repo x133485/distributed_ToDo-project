@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String
-from user_service.database import Base  # 必须使用完整路径
+from sqlalchemy import Column, Integer, String,ForeignKey,DateTime
+from user_service.database import Base 
+from sqlalchemy.orm import relationship
+from datetime import datetime # 必须使用完整路径
 
 class User(Base):
     __tablename__ = "users"

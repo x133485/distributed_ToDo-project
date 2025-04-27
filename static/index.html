@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Task Management System</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<style>
+    body {
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      font-family: 'Segoe UI', sans-serif;
+      color: #f1f1f1;
+    }
+    .sidebar {
+      background-color: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      backdrop-filter: blur(8px);
+    }
+    .task-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin-bottom: 1rem;
+      color: #fff;
+      transition: transform 0.2s;
+    }
+    .task-card:hover {
+      transform: translateY(-3px);
+    }
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .modal-content {
+      background: #2c3e50;
+      color: #fff;
+      border-radius: 12px;
+    }
+    .form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .form-control::placeholder {
+      color: #ccc;
+    }
+    .btn-primary, .btn-success {
+      border-radius: 30px;
+      padding: 0.5rem 1.5rem;
+    }
+    .login-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .login-box {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 1rem;
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 400px;
+    }
+  
+    .task-form {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .task-form input,
+    .task-form textarea {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .task-form input::placeholder,
+    .task-form textarea::placeholder {
+      color: #ccc;
+    }
+
+
+    .task-form input,
+    .task-form textarea {
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem;
+    }
+    .task-form button {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    .task-form button:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+</style>
+</head>
+<body>
+<button class="btn btn-outline-light logout-btn" onclick="logout()">🚪 Logout</button>
+<div class="login-overlay" id="login-screen">
+<div class="login-box">
+<h4 class="text-center mb-4">🔐 Welcome to Task Manager</h4>
+<input class="form-control mb-3" id="login-username" placeholder="Username" type="text"/>
+<input class="form-control mb-3" id="login-password" placeholder="Password" type="password"/>
+<div class="d-grid gap-2">
+<button class="btn btn-primary" onclick="submitLogin()">Login</button>
+<button class="btn btn-outline-light" onclick="submitRegister()">Register</button>
+</div>
+</div>
+</div>
+<div class="container-fluid" id="app-main" style="display:none">
+<div class="row">
+<div class="col-md-3 sidebar">
+<h5 id="user-label">👤 User: </h5>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+<h6>Your Tasks</h6>
+<button class="btn btn-outline-light btn-sm" data-bs-target="#ownTaskModal" data-bs-toggle="modal">+ Add</button>
+</div>
+<div id="task-list">
+        {% for task in tasks %}
+          <div class="task-card">
+<h3>{{ task.title }}</h3>
+<p>{{ task.description }}</p>
+            {% if task.label %}
+              <p><strong>Classification：</strong>{{ task.label }}</p>
+            {% endif %}
+            <p><strong>Status：</strong>{{ "Completed" if task.completed else "in progress" }}</p>
+</div>
+        {% endfor %}
+      </div>
+</div>
+<div class="col-md-9 p-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
+<h2 class="fw-light">🌍 Group Channel</h2>
+<div class="input-group mb-4" style="max-width: 400px;">
+<input class="form-control" id="channel-code-input" placeholder="Enter Channel Code" type="text"/>
+<button class="btn btn-outline-light" onclick="joinChannel()">Join</button>
+</div>
+<button class="btn btn-success" data-bs-target="#publicTaskModal" data-bs-toggle="modal">+ New Public Task</button>
+</div>
+<div class="task-grid" id="public-task-view"></div>
+</div>
+</div>
+</div>
+<!-- Public Task Modal -->
+<div class="modal fade" id="publicTaskModal" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header border-0">
+<h5 class="modal-title">Create Public Task</h5>
+<button class="btn-close btn-close-white" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<input class="form-control mb-3" id="modal-task-title" placeholder="Task Title" type="text"/>
+<textarea class="form-control mb-3" id="modal-task-content" placeholder="Task Description"></textarea>
+<input class="form-control" id="modal-task-code" placeholder="Channel Code" type="text"/>
+</div>
+<div class="modal-footer border-0">
+<button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+<button class="btn btn-primary" onclick="submitPublicTask()">Create</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Own Task Modal -->
+<div class="modal fade" id="ownTaskModal" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header border-0">
+<h5 class="modal-title">Create Own Task</h5>
+<button class="btn-close btn-close-white" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<input class="form-control mb-3" id="own-task-title" placeholder="Task Title" type="text"/>
+<textarea class="form-control" id="own-task-content" placeholder="Task Description"></textarea>
+</div>
+<div class="modal-footer border-0">
+<button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+<button class="btn btn-primary" onclick="submitOwnTask()">Create</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Edit Task Modal -->
+<div class="modal fade" id="editTaskModal" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header border-0">
+<h5 class="modal-title">Edit Task</h5>
+<button class="btn-close btn-close-white" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<input class="form-control mb-3" id="edit-task-title" placeholder="Task Title" type="text"/>
+<textarea class="form-control" id="edit-task-content" placeholder="Task Description"></textarea>
+</div>
+<div class="modal-footer border-0">
+<button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+<button class="btn btn-primary" onclick="submitEditTask()">Save</button>
+</div>
+</div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let authToken = localStorage.getItem('authToken');
+let loadedPublicTaskIds = new Set();
+
+async function submitLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  if (!username || !password) {
+    alert("Username and password cannot be empty."); return;
+  }
+  const response = await fetch('http://localhost:8000/login', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+  if (response.ok) {
+    const data = await response.json();
+    authToken = data.token;
+    localStorage.setItem('authToken', authToken);
+    document.getElementById('user-label').innerText = '👤 User: ' + username;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-main').style.display = 'block';
+    loadTasks();
+  } else {
+    const err = await response.text();
+    alert('Login failed: ' + err);
+  }
+}
+
+async function submitRegister() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  if (!username || !password) {
+    alert("Username and password cannot be empty."); return;
+  }
+  const response = await fetch('http://localhost:8000/register', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+  const data = await response.text();
+  if (response.ok) {
+    alert('Registration successful. Please login.');
+  } else {
+    alert('Registration failed: ' + data);
+  }
+}
+
+async function loadTasks() {
+  const response = await fetch('http://localhost:8001/tasks', {
+    headers: { 'Authorization': `Bearer ${authToken}` }
+  });
+  const tasks = await response.json();
+  const taskList = document.getElementById('task-list');
+  const publicContainer = document.getElementById('public-task-view');
+  taskList.innerHTML = '';
+  publicContainer.innerHTML = '';
+  for (const task of tasks) {
+    const card = document.createElement('div');
+    card.className = 'task-card';
+    card.innerHTML = `<strong>${task.title}</strong><p>${task.content}</p>`;
+    card.addEventListener('contextmenu', async (e) => {
+    e.preventDefault();
+    if (e.shiftKey) {
+      const confirmed = confirm("Do you want to delete this task?");
+      if (!confirmed) return;
+
+      const endpoint = task.is_public ? `public_tasks/${task.id}` : `tasks/${task.id}`;
+      const response = await fetch(`http://localhost:8001/${endpoint}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+
+      if (response.ok) {
+        card.remove();
+        loadedPublicTaskIds.delete(task.id);
+      } else {
+        alert("Failed to delete task.");
+      }
+    } else {
+      markTaskDone(card);
+    }
+  });
+
+
+    // 允许点击编辑（仅限个人任务或本人发布的公共任务）
+    if (!task.is_public || (task.is_public && task.editable)) {
+      card.style.cursor = "pointer";
+      card.onclick = () => editTaskInline(task.id, task.title, task.content, task.is_public);
+    }
+    if (task.is_public && task.channel_code) {
+      card.innerHTML += `<small>Channel: ${task.channel_code}</small><br><small>👤 Creator: ${task.username}</small>`;
+      publicContainer.appendChild(card);
+    } else {
+      taskList.appendChild(card);
+    }
+  }
+}
+
+async function submitPublicTask() {
+  const title = document.getElementById('modal-task-title').value;
+  const content = document.getElementById('modal-task-content').value;
+  const code = document.getElementById('modal-task-code').value;
+  const response = await fetch('http://localhost:8001/public_tasks/create', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+    body: JSON.stringify({ title, content, channel_code: code })
+  });
+  const result = await response.json();
+  if (response.ok) {
+    loadTasks();
+    bootstrap.Modal.getInstance(document.getElementById('publicTaskModal')).hide();
+    document.getElementById('modal-task-title').value = '';
+    document.getElementById('modal-task-content').value = '';
+    document.getElementById('modal-task-code').value = '';
+  } else {
+    alert("Failed: " + result.detail);
+  }
+}
+
+async function submitOwnTask() {
+  const title = document.getElementById('own-task-title').value;
+  const content = document.getElementById('own-task-content').value;
+  const response = await fetch('http://localhost:8001/tasks', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+    body: JSON.stringify({ title, content })
+  });
+  if (response.ok) {
+    loadTasks();
+    bootstrap.Modal.getInstance(document.getElementById('ownTaskModal')).hide();
+    document.getElementById('own-task-title').value = '';
+    document.getElementById('own-task-content').value = '';
+  } else {
+    alert("Failed to create own task.");
+  }
+}
+
+function editTaskInline(taskId, oldTitle, oldContent, isPublic) {
+  document.getElementById('edit-task-title').value = oldTitle;
+  document.getElementById('edit-task-content').value = oldContent;
+  currentEditTask = { id: taskId, isPublic };
+
+  const modal = new bootstrap.Modal(document.getElementById('editTaskModal'));
+  modal.show();
+}
+
+
+function markTaskDone(element) {
+  element.classList.toggle('bg-success');
+  element.style.textDecoration = element.style.textDecoration === 'line-through' ? 'none' : 'line-through';
+}
+
+async function joinChannel() {
+  const code = document.getElementById('channel-code-input').value.trim();
+  if (!code) return alert("Please enter a channel code.");
+
+  const response = await fetch(`http://localhost:8001/public_tasks/${code}`, {
+    headers: { 'Authorization': `Bearer ${authToken}` }
+  });
+
+  if (response.ok) {
+    const task = await response.json();
+    if (!loadedPublicTaskIds.has(task.id)) {
+      renderPublicCard(task);
+      loadedPublicTaskIds.add(task.id);
+    } else {
+      alert("You have already joined this task.");
+    }
+  } else {
+    alert("No task found for this channel code.");
+  }
+}
+
+function renderPublicCard(task) {
+  const card = document.createElement('div');
+  card.className = 'task-card';
+  card.innerHTML = `
+    <strong>${task.title}</strong>
+    <p>${task.content}</p>
+    <small>Channel: ${task.channel_code}</small><br>
+    <small>👤 Creator: ${task.username || 'User ' + task.user_id}</small>
+  `;
+
+  card.addEventListener('contextmenu', async (e) => {
+    e.preventDefault();
+    if (e.shiftKey) {
+      const confirmed = confirm("Do you want to delete this task?");
+      if (!confirmed) return;
+
+      const endpoint = `public_tasks/${task.id}`;
+      const response = await fetch(`http://localhost:8001/${endpoint}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+
+      if (response.ok) {
+        card.remove();
+        loadedPublicTaskIds.delete(task.id);
+      } else {
+        alert("Failed to delete task.");
+      }
+    } else {
+      markTaskDone(card);
+    }
+  });
+
+  if (task.editable) {
+    card.style.cursor = "pointer";
+    card.onclick = () => editTaskInline(task.id, task.title, task.content, true);
+  }
+
+  document.getElementById('public-task-view').appendChild(card);
+}
+let currentEditTask = { id: null, isPublic: false };
+
+async function submitEditTask() {
+  const newTitle = document.getElementById('edit-task-title').value.trim();
+  const newContent = document.getElementById('edit-task-content').value.trim();
+  if (!newTitle || !newContent) return alert("Title and content cannot be empty.");
+
+  const endpoint = currentEditTask.isPublic ? `public_tasks/${currentEditTask.id}` : `tasks/${currentEditTask.id}`;
+
+  const response = await fetch(`http://localhost:8001/${endpoint}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
+    body: JSON.stringify({ title: newTitle, content: newContent })
+  });
+
+  if (response.ok) {
+    bootstrap.Modal.getInstance(document.getElementById('editTaskModal')).hide();
+    loadTasks();
+  } else {
+    alert("Failed to update task.");
+  }
+}
+
+function logout() {
+  localStorage.removeItem('authToken');
+  location.reload();}
+
+</script>
+</body>
+</html>
