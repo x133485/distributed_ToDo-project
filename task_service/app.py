@@ -6,7 +6,9 @@ from task_service.database import SessionLocal, engine, Base
 from task_service import crud, models
 import httpx
 import requests
+import os
 
+USER_SERVICE_URL = os.getenv("USER_SERVICE_URL","${PUBLIC_HOST}")
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -27,7 +29,7 @@ def get_db():
 
 def validate_token(token: str = Header(...)):
     try:
-        res = requests.post("http://localhost:8000/validate_user", json={"token": token})
+        res = requests.post(f"{USER_SERVICE_URL}/validate_user", json={"token": token})
         data = res.json()
         if res.status_code == 200 and data.get("valid"):
             return data["user_id"]
@@ -52,7 +54,7 @@ async def validate_user(token: str):
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(
-                "http://localhost:8000/validate_user",
+                f"{USER_SERVICE_URL}/validate_user",
                 json={"token": token},
                 headers={"Content-Type": "application/json"}
             )
@@ -124,7 +126,7 @@ async def get_public_task(code: str, user_id: int = Depends(get_current_user), d
         raise HTTPException(status_code=404, detail="Task not found")
     
     async with httpx.AsyncClient() as client:
-        res = await client.get(f"http://localhost:8000/user_info/{task.user_id}")
+        res = await client.get(f"{USER_SERVICE_URL}/user_info/{task.user_id}")
         username = res.json().get("username", f"User {task.user_id}")
 
     return {

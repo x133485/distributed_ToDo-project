@@ -227,6 +227,10 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+
+  const PUBLIC_HOST = "http://192.168.1.158";
+  const USER_BASE = `${PUBLIC_HOST}:8000`;
+  const TASK_BASE = `${PUBLIC_HOST}:8001`;
 let authToken = localStorage.getItem('authToken');
 let loadedPublicTaskIds = new Set();
 
@@ -236,7 +240,7 @@ async function submitLogin() {
   if (!username || !password) {
     alert("Username and password cannot be empty."); return;
   }
-  const response = await fetch('http://localhost:8000/login', {
+  const response = await fetch(`${USER_BASE}/login`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   });
@@ -260,7 +264,7 @@ async function submitRegister() {
   if (!username || !password) {
     alert("Username and password cannot be empty."); return;
   }
-  const response = await fetch('http://localhost:8000/register', {
+  const response = await fetch(`${USER_BASE}/register`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   });
@@ -273,7 +277,7 @@ async function submitRegister() {
 }
 
 async function loadTasks() {
-  const response = await fetch('http://localhost:8001/tasks', {
+  const response = await fetch(`${TASK_BASE}/tasks`, {
     headers: { 'Authorization': `Bearer ${authToken}` }
   });
   const tasks = await response.json();
@@ -292,7 +296,7 @@ async function loadTasks() {
       if (!confirmed) return;
 
       const endpoint = task.is_public ? `public_tasks/${task.id}` : `tasks/${task.id}`;
-      const response = await fetch(`http://localhost:8001/${endpoint}`, {
+      const response = await fetch(`${TASK_BASE}/${endpoint}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
@@ -327,7 +331,7 @@ async function submitPublicTask() {
   const title = document.getElementById('modal-task-title').value;
   const content = document.getElementById('modal-task-content').value;
   const code = document.getElementById('modal-task-code').value;
-  const response = await fetch('http://localhost:8001/public_tasks/create', {
+  const response = await fetch(`${TASK_BASE}/public_tasks/create`, {
     method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
     body: JSON.stringify({ title, content, channel_code: code })
   });
@@ -346,7 +350,7 @@ async function submitPublicTask() {
 async function submitOwnTask() {
   const title = document.getElementById('own-task-title').value;
   const content = document.getElementById('own-task-content').value;
-  const response = await fetch('http://localhost:8001/tasks', {
+  const response = await fetch(`${TASK_BASE}/tasks`, {
     method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
     body: JSON.stringify({ title, content })
   });
@@ -379,7 +383,7 @@ async function joinChannel() {
   const code = document.getElementById('channel-code-input').value.trim();
   if (!code) return alert("Please enter a channel code.");
 
-  const response = await fetch(`http://localhost:8001/public_tasks/${code}`, {
+  const response = await fetch(`${TASK_BASE}/public_tasks/${code}`, {
     headers: { 'Authorization': `Bearer ${authToken}` }
   });
 
@@ -413,7 +417,7 @@ function renderPublicCard(task) {
       if (!confirmed) return;
 
       const endpoint = `public_tasks/${task.id}`;
-      const response = await fetch(`http://localhost:8001/${endpoint}`, {
+      const response = await fetch(`${TASK_BASE}/${endpoint}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
@@ -445,7 +449,7 @@ async function submitEditTask() {
 
   const endpoint = currentEditTask.isPublic ? `public_tasks/${currentEditTask.id}` : `tasks/${currentEditTask.id}`;
 
-  const response = await fetch(`http://localhost:8001/${endpoint}`, {
+  const response = await fetch(`${TASK_BASE}/${endpoint}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
