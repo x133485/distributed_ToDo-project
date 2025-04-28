@@ -43,7 +43,7 @@ def delete_task(db: Session, task_id: int):
     return db_task
 
 def create_public_task(db: Session, user_id: int, title: str, content: str, channel_code: str):
-    print(f"📝 创建公共任务: 用户 {user_id}, 标题 {title}, 频道码 {channel_code}")  # 用于调试
+    # print(f"创建公共任务: 用户 {user_id}, 标题 {title}, 频道码 {channel_code}")  # 用于调试
 
     task = Task(
         user_id=user_id,

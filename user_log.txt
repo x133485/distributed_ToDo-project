@@ -1,10 +1,77 @@
-INFO:     Will watch for changes in these directories: ['E:\\学习\\大三上学期\\algorithms\\Distributed system\\project\\distributed_ToDo-project-main(1)\\distributed_ToDo-project-main']
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [7532] using StatReload
-INFO:     Started server process [23672]
+INFO:     Will watch for changes in these directories: ['E:\\学习\\大三上学期\\algorithms\\Distributed system\\project']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [12792] using StatReload
+INFO:     Started server process [2192]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:8804 - "OPTIONS /login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:8804 - "POST /login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:8813 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12160 - "OPTIONS /register HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12160 - "POST /register HTTP/1.1" 400 Bad Request
+INFO:     192.168.1.158:12168 - "OPTIONS /register HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12168 - "POST /register HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12176 - "OPTIONS /login HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12176 - "POST /login HTTP/1.1" 401 Unauthorized
+INFO:     192.168.1.158:12176 - "OPTIONS /login HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12176 - "POST /login HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12181 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12211 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12212 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12251 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12252 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12267 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12268 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12278 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12279 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12310 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56618 - "OPTIONS /register HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56619 - "POST /register HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56619 - "OPTIONS /login HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56623 - "POST /login HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12378 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12394 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12395 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12404 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12405 - "GET /user_info/11 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12421 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12423 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56682 - "OPTIONS /login HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56683 - "POST /login HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12465 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12474 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12475 - "GET /user_info/11 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56742 - "OPTIONS /register HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56743 - "POST /register HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56750 - "OPTIONS /login HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56751 - "POST /login HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56752 - "OPTIONS /login HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56753 - "POST /login HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12535 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12537 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12546 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12548 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12563 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12564 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12574 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12575 - "GET /user_info/11 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12589 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12590 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56875 - "OPTIONS /register HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56876 - "POST /register HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56876 - "OPTIONS /login HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56881 - "POST /login HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12678 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12692 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12694 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12722 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12723 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12733 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12734 - "GET /user_info/11 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12748 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12750 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12858 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12859 - "GET /user_info/11 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12907 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12949 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12951 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12952 - "POST /validate_user HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12953 - "POST /validate_user HTTP/1.1" 200 OK
 ^C

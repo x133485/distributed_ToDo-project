@@ -4,4 +4,11 @@ sqlalchemy
 psycopg2
 
 
+## 告诉 user_service 连接自己的数据库 user_db
+#$env:DATABASE_URL = "postgresql://todo:123456@localhost:5432/user_db"
+#python -m uvicorn user_service.app:app --host 0.0.0.0 --port 8000 --reload
 
+
+#$env:DATABASE_URL = "postgresql://todo:123456@localhost:5432/task_db"
+#$env:USER_SERVICE_URL = "http://192.168.1.158:8000"
+#python -m uvicorn task_service.app:app --host 0.0.0.0 --port 8001 --reload

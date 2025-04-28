@@ -1,9 +1,93 @@
-INFO:     Will watch for changes in these directories: ['E:\\学习\\大三上学期\\algorithms\\Distributed system\\project\\distributed_ToDo-project-main(1)\\distributed_ToDo-project-main']
-INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
-INFO:     Started reloader process [33464] using StatReload
-INFO:     Started server process [25496]
+INFO:     Will watch for changes in these directories: ['E:\\学习\\大三上学期\\algorithms\\Distributed system\\project']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [33812] using StatReload
+INFO:     Started server process [11956]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:8808 - "OPTIONS /tasks HTTP/1.1" 200 OK
-INFO:     127.0.0.1:8808 - "GET /tasks HTTP/1.1" 200 OK
-^C
+INFO:     192.168.1.158:12180 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12180 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12210 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12210 - "POST /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12210 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12210 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12250 - "OPTIONS /public_tasks/create HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12250 - "POST /public_tasks/create HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12250 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12250 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12266 - "OPTIONS /public_tasks/20 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12266 - "PUT /public_tasks/20 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12266 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12266 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12277 - "OPTIONS /tasks/19 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12277 - "PUT /tasks/19 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12277 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12277 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12309 - "OPTIONS /tasks/19 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12309 - "DELETE /tasks/19 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56625 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56626 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56634 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56635 - "POST /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56637 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56635 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56642 - "OPTIONS /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56643 - "GET /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56653 - "OPTIONS /public_tasks/create HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56655 - "POST /public_tasks/create HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56655 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56656 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56658 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56684 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56687 - "OPTIONS /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56690 - "GET /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56754 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56755 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56756 - "GET /tasks HTTP/1.1" 401 Unauthorized
+INFO:     192.168.1.159:56757 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56764 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56765 - "POST /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56766 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56765 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56775 - "OPTIONS /public_tasks/create HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56776 - "POST /public_tasks/create HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56776 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56778 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56788 - "OPTIONS /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56789 - "GET /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56798 - "OPTIONS /public_tasks/24 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56800 - "PUT /public_tasks/24 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56801 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56800 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56883 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56884 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56894 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56895 - "POST /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56896 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56895 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56897 - "OPTIONS /public_tasks/create HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56918 - "POST /public_tasks/create HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56918 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56919 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56920 - "OPTIONS /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56925 - "GET /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56934 - "OPTIONS /tasks/25 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56935 - "PUT /tasks/25 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56936 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56935 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56978 - "OPTIONS /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56980 - "GET /public_tasks/9 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56981 - "OPTIONS /public_tasks/26 HTTP/1.1" 200 OK
+INFO:     192.168.1.159:56999 - "DELETE /public_tasks/26 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12948 - "OPTIONS /public_tasks/20 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12948 - "PUT /public_tasks/20 HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12948 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.158:12948 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:57000 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:57020 - "POST /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:57021 - "OPTIONS /tasks HTTP/1.1" 200 OK
+INFO:     192.168.1.159:57020 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [11956]
+INFO:     Stopping reloader process [33812]
