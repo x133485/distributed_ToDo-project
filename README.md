@@ -44,7 +44,7 @@ CORS — Frontend-backend cross-origin communication
 Prerequisites
 Python 3.9+
 PostgreSQL installed and running
-Internet access (for external client testing)
+Internet access (for external client testing),remebr to change IP address to run.  
 
 1. Prepare Databases
 Create two databases: user_db and task_db
